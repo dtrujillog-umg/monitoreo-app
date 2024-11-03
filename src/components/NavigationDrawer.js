@@ -15,23 +15,29 @@ import {
     Box,
     Switch,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import ThermostatIcon from '@mui/icons-material/Thermostat';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import AirIcon from '@mui/icons-material/Air';
 import CloudIcon from '@mui/icons-material/Cloud';
-import WaterIcon from '@mui/icons-material/Water'; // Icono para el nuevo componente de turbidez
-import WhatshotIcon from '@mui/icons-material/Whatshot'; // Icono para el nuevo componente
+import WaterIcon from '@mui/icons-material/Water';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 
 const drawerWidth = 280;
 
-const NavigationDrawer = ({ onToggleTheme, darkMode }) => {
+const NavigationDrawer = ({ onToggleTheme, darkMode, onLogout }) => {
     const [mobileOpen, setMobileOpen] = useState(false);
+    const navigate = useNavigate();
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
+    };
+
+    const handleLogout = () => {
+        onLogout(); // Llama a la función de cierre de sesión
+        navigate('/login'); // Redirigir a la página de login
     };
 
     const drawer = (
@@ -43,14 +49,16 @@ const NavigationDrawer = ({ onToggleTheme, darkMode }) => {
             </Toolbar>
             <Divider />
             <List>
-                {[
+                {[ 
                     { text: 'Home', icon: <HomeIcon />, route: '/' },
                     { text: 'BME280', icon: <CloudIcon />, route: '/bme280' },
                     { text: 'DHT11', icon: <ThermostatIcon />, route: '/dht11' },
                     { text: 'MQ9', icon: <BarChartIcon />, route: '/mq9' },
                     { text: 'MQ135', icon: <AirIcon />, route: '/mq135' },
                     { text: 'Temperatura', icon: <WhatshotIcon />, route: '/temperatura' },
-                    { text: 'Turbidez', icon: <WaterIcon />, route: '/turbidez' }, // Nuevo ítem
+                    { text: 'Turbidez', icon: <WaterIcon />, route: '/turbidez' },
+                    { text: 'Mantenimiento', icon: <ThermostatIcon />, route: '/mantenimiento' }, // Agregar ruta de Mantenimiento
+                    { text: 'Administración', icon: <ThermostatIcon />, route: '/administracion' }, // Agregar ruta de Administración
                 ].map((item) => (
                     <ListItem key={item.text} disablePadding>
                         <ListItemButton component={Link} to={item.route}>
@@ -59,6 +67,12 @@ const NavigationDrawer = ({ onToggleTheme, darkMode }) => {
                         </ListItemButton>
                     </ListItem>
                 ))}
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton onClick={handleLogout}>
+                        <ListItemText primary="Logout" />
+                    </ListItemButton>
+                </ListItem>
             </List>
             <Divider />
             <Box sx={{ display: 'flex', alignItems: 'center', padding: 2 }}>
